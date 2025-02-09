@@ -1,0 +1,15 @@
+[package]
+name = "sweebs_dao"
+edition = "2024.beta"
+license = "MIT"
+authors = ["Fesal (@iamknownasfesal)"]
+
+[dependencies]
+MoveStdlib = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/move-stdlib", rev = "framework/mainnet" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet" }
+Kiosk = { git = "https://github.com/MystenLabs/apps.git", subdir = "kiosk", rev = "main" }
+
+[addresses]
+sweebs_dao = "0x0"
+std = "0x1"
+sui = "0x2"
