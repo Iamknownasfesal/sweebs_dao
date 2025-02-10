@@ -13,25 +13,25 @@ public struct VoteType has store, copy, drop {
 
 // === Public-Mutative Functions ===
 
-public fun new(name: String, total_vote_value: u64): VoteType {
+public(package) fun new(name: String, total_vote_value: u64): VoteType {
     VoteType { name, total_vote_value }
 }
 
-public fun increment_total_vote_value(self: &mut VoteType) {
+public(package) fun increment_total_vote_value(self: &mut VoteType) {
     self.total_vote_value = self.total_vote_value + 1;
 }
 
-public fun from_string(name: String): VoteType {
+public(package) fun from_string(name: String): VoteType {
     VoteType { name, total_vote_value: 0 }
 }
 
 // === Public-View Functions ===
 
-public fun name(self: &VoteType): String {
+public(package) fun name(self: &VoteType): String {
     self.name
 }
 
-public fun total_vote_value(self: &VoteType): u64 {
+public(package) fun total_vote_value(self: &VoteType): u64 {
     self.total_vote_value
 }
 

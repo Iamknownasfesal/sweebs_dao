@@ -6,12 +6,12 @@ use sui::{clock::Clock, kiosk::{Kiosk, KioskOwnerCap}};
 use sweebs_dao::{
     acl::AdminWitness,
     allowed_versions::AllowedVersions,
-    config::DaoConfig,
+    config::{Self, DaoConfig},
     dao::DAO,
     proposal::{Self, Proposal}
 };
 
-// === Public Functions ===
+// === Public Proposal Functions ===
 
 public fun propose(
     _: &AdminWitness<DAO>,
@@ -37,7 +37,7 @@ public fun propose(
 }
 
 #[allow(lint(share_owned))]
-public fun share_proposal(proposal: Proposal) {
+public fun share_proposal(proposal: Proposal, _: &mut TxContext) {
     transfer::public_share_object(proposal);
 }
 
@@ -48,7 +48,7 @@ public fun execute(
     av: &AllowedVersions,
     ctx: &mut TxContext,
 ) {
-    proposal::execute(proposal, config, clock, av, ctx);
+    proposal.execute(config, clock, av, ctx);
 }
 
 public fun vote<NFT: key + store>(
@@ -102,4 +102,94 @@ public fun vote_from_personal_kiosk<NFT: key + store>(
             ctx,
         );
     });
+}
+
+// === Public Config Functions ===
+
+public fun new_config<NFT: key + store>(
+    _: &AdminWitness<DAO>,
+    maximum_amount_of_participants: u64,
+    quorum: u8,
+    min_yes_votes: u64,
+    min_voting_period: u64,
+    max_voting_period: u64,
+    ctx: &mut TxContext,
+): DaoConfig {
+    config::new<NFT>(
+        maximum_amount_of_participants,
+        quorum,
+        min_yes_votes,
+        min_voting_period,
+        max_voting_period,
+        ctx,
+    )
+}
+
+#[allow(lint(share_owned))]
+public fun share_config(config: DaoConfig, _: &mut TxContext) {
+    transfer::public_share_object(config);
+}
+
+public fun set_maximum_amount_of_participants(
+    config: &mut DaoConfig,
+    witness: &AdminWitness<DAO>,
+    maximum_amount_of_participants: u64,
+    _: &mut TxContext,
+) {
+    config.set_maximum_amount_of_participants(
+        witness,
+        maximum_amount_of_participants,
+    );
+}
+
+public fun set_quorum(
+    config: &mut DaoConfig,
+    witness: &AdminWitness<DAO>,
+    quorum: u8,
+    _: &mut TxContext,
+) {
+    config.set_quorum(witness, quorum);
+}
+
+public fun set_min_yes_votes(
+    config: &mut DaoConfig,
+    witness: &AdminWitness<DAO>,
+    min_yes_votes: u64,
+    _: &mut TxContext,
+) {
+    config.set_min_yes_votes(witness, min_yes_votes);
+}
+
+public fun set_min_voting_period(
+    config: &mut DaoConfig,
+    witness: &AdminWitness<DAO>,
+    min_voting_period: u64,
+    _: &mut TxContext,
+) {
+    config.set_min_voting_period(witness, min_voting_period);
+}
+
+public fun set_max_voting_period(
+    config: &mut DaoConfig,
+    witness: &AdminWitness<DAO>,
+    max_voting_period: u64,
+    _: &mut TxContext,
+) {
+    config.set_max_voting_period(witness, max_voting_period);
+}
+
+public fun add_nft_type<NFT: key + store>(
+    config: &mut DaoConfig,
+    witness: &AdminWitness<DAO>,
+    _: &mut TxContext,
+) {
+    config.add_nft_type<NFT>(witness);
+}
+
+public fun remove_nft_type<NFT: key + store>(
+    config: &mut DaoConfig,
+    witness: &AdminWitness<DAO>,
+    _: &mut TxContext,
+) {
+    config.remove_nft_type<NFT>(witness);
 }

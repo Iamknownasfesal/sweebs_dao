@@ -126,14 +126,8 @@ public(package) fun execute(
     av: &AllowedVersions,
     ctx: &mut TxContext,
 ) {
-    assert!(
-        proposal.status == ProposalStatus::Active,
-        errors::invalid_proposal_status!(),
-    );
-    assert!(
-        proposal.info.end_time < clock.timestamp_ms(),
-        errors::invalid_proposal_timing!(),
-    );
+    proposal.assert_proposal_active();
+    proposal.assert_proposal_timing(clock);
     proposal.assert_config_id(config);
     config.assert_quorum(proposal.quorum_threshold(config));
     av.assert_pkg_version();
@@ -149,17 +143,17 @@ public(package) fun execute(
     events::execute(proposal.id(), proposal.winner(), ctx);
 }
 
-// === Public View Functions ===
+// === Public Package View Functions ===
 
-public fun id(proposal: &Proposal): ID {
+public(package) fun id(proposal: &Proposal): ID {
     object::id(proposal)
 }
 
-public fun status(proposal: &Proposal): ProposalStatus {
+public(package) fun status(proposal: &Proposal): ProposalStatus {
     proposal.status
 }
 
-public fun winner(proposal: &Proposal): Option<VoteType> {
+public(package) fun winner(proposal: &Proposal): Option<VoteType> {
     match (proposal.status) {
         ProposalStatus::Executed(vote_type) => option::some(vote_type),
         _ => option::none(),
@@ -202,6 +196,20 @@ fun quorum_threshold(proposal: &Proposal, config: &DaoConfig): u8 {
 
 fun assert_config_id(proposal: &Proposal, config: &DaoConfig) {
     assert!(proposal.config == config.id(), errors::invalid_config_id!());
+}
+
+fun assert_proposal_active(proposal: &Proposal) {
+    assert!(
+        proposal.status == ProposalStatus::Active,
+        errors::invalid_proposal_status!(),
+    );
+}
+
+fun assert_proposal_timing(proposal: &Proposal, clock: &Clock) {
+    assert!(
+        proposal.info.end_time < clock.timestamp_ms(),
+        errors::invalid_proposal_timing!(),
+    );
 }
 
 // === Test Functions ===

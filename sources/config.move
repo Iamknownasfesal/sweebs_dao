@@ -21,29 +21,9 @@ public struct DaoConfig has key, store {
     nft_types: vector<TypeName>,
 }
 
-// === Public-Mutative Functions ===
-
-public fun new<NFT: key + store>(
-    _: &AdminWitness<DAO>,
-    maximum_amount_of_participants: u64,
-    quorum: u8,
-    min_yes_votes: u64,
-    min_voting_period: u64,
-    max_voting_period: u64,
-    ctx: &mut TxContext,
-): DaoConfig {
-    internal_new<NFT>(
-        maximum_amount_of_participants,
-        quorum,
-        min_yes_votes,
-        min_voting_period,
-        max_voting_period,
-        ctx,
-    )
-}
-
 // === Package Functions ===
-public(package) fun internal_new<NFT: key + store>(
+
+public(package) fun new<NFT: key + store>(
     maximum_amount_of_participants: u64,
     quorum: u8,
     min_yes_votes: u64,
@@ -69,7 +49,7 @@ public(package) fun proposal_created(dao_config: &mut DaoConfig) {
 
 // === Public-Mutative Functions ===
 
-public fun set_maximum_amount_of_participants(
+public(package) fun set_maximum_amount_of_participants(
     dao_config: &mut DaoConfig,
     _: &AdminWitness<DAO>,
     maximum_amount_of_participants: u64,
@@ -77,7 +57,7 @@ public fun set_maximum_amount_of_participants(
     dao_config.maximum_amount_of_participants = maximum_amount_of_participants;
 }
 
-public fun set_quorum(
+public(package) fun set_quorum(
     dao_config: &mut DaoConfig,
     _: &AdminWitness<DAO>,
     quorum: u8,
@@ -85,7 +65,7 @@ public fun set_quorum(
     dao_config.quorum = quorum;
 }
 
-public fun set_min_yes_votes(
+public(package) fun set_min_yes_votes(
     dao_config: &mut DaoConfig,
     _: &AdminWitness<DAO>,
     min_yes_votes: u64,
@@ -93,7 +73,7 @@ public fun set_min_yes_votes(
     dao_config.min_yes_votes = min_yes_votes;
 }
 
-public fun set_min_voting_period(
+public(package) fun set_min_voting_period(
     dao_config: &mut DaoConfig,
     _: &AdminWitness<DAO>,
     min_voting_period: u64,
@@ -101,7 +81,7 @@ public fun set_min_voting_period(
     dao_config.min_voting_period = min_voting_period;
 }
 
-public fun set_max_voting_period(
+public(package) fun set_max_voting_period(
     dao_config: &mut DaoConfig,
     _: &AdminWitness<DAO>,
     max_voting_period: u64,
@@ -109,14 +89,14 @@ public fun set_max_voting_period(
     dao_config.max_voting_period = max_voting_period;
 }
 
-public fun add_nft_type<NFT: key + store>(
+public(package) fun add_nft_type<NFT: key + store>(
     dao_config: &mut DaoConfig,
     _: &AdminWitness<DAO>,
 ) {
     dao_config.nft_types.push_back(type_name::get<NFT>());
 }
 
-public fun remove_nft_type<NFT: key + store>(
+public(package) fun remove_nft_type<NFT: key + store>(
     dao_config: &mut DaoConfig,
     _: &AdminWitness<DAO>,
 ) {
@@ -129,23 +109,25 @@ public fun remove_nft_type<NFT: key + store>(
 
 // === Public-View Functions ===
 
-public fun id(dao_config: &DaoConfig): ID {
+public(package) fun id(dao_config: &DaoConfig): ID {
     object::id(dao_config)
 }
 
-public fun quorum(dao_config: &DaoConfig): u8 {
+public(package) fun quorum(dao_config: &DaoConfig): u8 {
     dao_config.quorum
 }
 
-public fun nft_types(dao_config: &DaoConfig): vector<TypeName> {
+public(package) fun nft_types(dao_config: &DaoConfig): vector<TypeName> {
     dao_config.nft_types
 }
 
-public fun proposal_index(dao_config: &DaoConfig): u64 {
+public(package) fun proposal_index(dao_config: &DaoConfig): u64 {
     dao_config.proposal_index
 }
 
-public fun maximum_amount_of_participants(dao_config: &DaoConfig): u64 {
+public(package) fun maximum_amount_of_participants(
+    dao_config: &DaoConfig,
+): u64 {
     dao_config.maximum_amount_of_participants
 }
 

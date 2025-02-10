@@ -11,7 +11,7 @@ public struct DisplayWrapper<phantom T: key> has key, store {
 
 // === Public-Mutative Functions ===
 
-public fun new<T: key>(
+public(package) fun new<T: key>(
     display: Display<T>,
     ctx: &mut TxContext,
 ): DisplayWrapper<T> {
