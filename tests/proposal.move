@@ -3,7 +3,6 @@ module sweebs_dao::proposal_tests;
 
 use sui::{clock, test_scenario as ts, test_utils::{assert_eq, destroy}};
 use sweebs_dao::{
-    acl,
     allowed_versions::{Self, AV},
     config,
     dao,
@@ -30,9 +29,7 @@ fun test_new_proposal() {
 
     scenario.next_tx(SENDER);
 
-    let witness = acl::sign_in_for_test();
     let mut dao_config = config::new<NFT>(
-        &witness,
         100, // max participants
         51, // quorum
         10, // min yes votes
@@ -75,9 +72,8 @@ fun test_successful_execution() {
     dao::init_for_test(scenario.ctx());
 
     scenario.next_tx(SENDER);
-    let witness = acl::sign_in_for_test();
+
     let mut dao_config = config::new<NFT>(
-        &witness,
         10, // max participants
         51, // quorum
         5, // min yes votes
@@ -151,9 +147,7 @@ fun test_vote_and_execute_failed() {
 
     scenario.next_tx(SENDER);
 
-    let witness = acl::sign_in_for_test();
     let mut dao_config = config::new<NFT>(
-        &witness,
         10, // Lower max participants for easier testing
         51, // 51% quorum
         8, // min yes votes
@@ -210,8 +204,7 @@ fun test_vote_and_execute_failed() {
         scenario.ctx(),
     );
 
-    // Verify proposal was executed (should be Executed since we have enough Yes
-    // votes)
+    // Verify proposal was failed
     assert_eq(
         proposal.status(),
         proposal::proposal_status_failed(),
@@ -233,9 +226,7 @@ fun test_invalid_time_range() {
 
     scenario.next_tx(SENDER);
 
-    let witness = acl::sign_in_for_test();
     let mut dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -275,9 +266,7 @@ fun test_empty_vote_types() {
 
     scenario.next_tx(SENDER);
 
-    let witness = acl::sign_in_for_test();
     let mut dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -322,9 +311,7 @@ fun test_duplicate_vote() {
 
     scenario.next_tx(SENDER);
 
-    let witness = acl::sign_in_for_test();
     let mut dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -381,9 +368,8 @@ fun test_quorum_not_met() {
     dao::init_for_test(scenario.ctx());
 
     scenario.next_tx(SENDER);
-    let witness = acl::sign_in_for_test();
+
     let mut dao_config = config::new<NFT>(
-        &witness,
         10, // max participants
         51, // quorum
         2, // min yes votes - set low to isolate quorum test
@@ -443,11 +429,9 @@ fun test_invalid_config_id() {
     dao::init_for_test(scenario.ctx());
 
     scenario.next_tx(SENDER);
-    let witness = acl::sign_in_for_test();
 
     // Create two different configs
     let mut dao_config1 = config::new<NFT>(
-        &witness,
         10,
         51,
         5,
@@ -457,7 +441,6 @@ fun test_invalid_config_id() {
     );
 
     let dao_config2 = config::new<NFT>(
-        &witness,
         10,
         51,
         5,
@@ -507,9 +490,8 @@ fun test_execute_before_end_time() {
     dao::init_for_test(scenario.ctx());
 
     scenario.next_tx(SENDER);
-    let witness = acl::sign_in_for_test();
+
     let mut dao_config = config::new<NFT>(
-        &witness,
         10,
         51,
         5,
@@ -559,9 +541,8 @@ fun test_execute_after_end_time_and_execute_again() {
     dao::init_for_test(scenario.ctx());
 
     scenario.next_tx(SENDER);
-    let witness = acl::sign_in_for_test();
+
     let mut dao_config = config::new<NFT>(
-        &witness,
         10,
         51,
         5,

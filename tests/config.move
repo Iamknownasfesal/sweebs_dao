@@ -6,7 +6,7 @@ module sweebs_dao::config_tests;
 
 use std::type_name;
 use sui::{test_scenario as ts, test_utils::{assert_eq, destroy}};
-use sweebs_dao::{acl, config, dao, errors, test_nft::NFT};
+use sweebs_dao::{config, dao, errors, test_nft::NFT};
 
 // Dummy type for testing invalid NFT type
 public struct InvalidNFT has key, store {
@@ -22,10 +22,7 @@ fun test_init() {
 
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let dao_config = config::new<NFT>(
-        &witness,
         100, // max participants
         51, // quorum
         10, // min yes votes
@@ -48,14 +45,9 @@ fun test_setters() {
     let sender = @0x0;
     let mut scenario = ts::begin(sender);
 
-    dao::init_for_test(scenario.ctx());
-
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let mut dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -65,27 +57,27 @@ fun test_setters() {
     );
 
     // Test setting maximum amount of participants
-    dao_config.set_maximum_amount_of_participants(&witness, 200);
+    dao_config.set_maximum_amount_of_participants(200);
     assert_eq(dao_config.maximum_amount_of_participants(), 200);
 
     // Test setting quorum
-    dao_config.set_quorum(&witness, 75);
+    dao_config.set_quorum(75);
     assert_eq(dao_config.quorum(), 75);
 
     // Test setting min yes votes
-    dao_config.set_min_yes_votes(&witness, 20);
+    dao_config.set_min_yes_votes(20);
 
     // Test setting min voting period
-    dao_config.set_min_voting_period(&witness, 1500);
+    dao_config.set_min_voting_period(1500);
 
     // Test setting max voting period
-    dao_config.set_max_voting_period(&witness, 3000);
+    dao_config.set_max_voting_period(3000);
 
     // Test adding and removing NFT types
-    dao_config.add_nft_type<NFT>(&witness);
+    dao_config.add_nft_type<NFT>();
     assert_eq(dao_config.nft_types().length(), 2);
 
-    dao_config.remove_nft_type<NFT>(&witness);
+    dao_config.remove_nft_type<NFT>();
     assert_eq(dao_config.nft_types().length(), 1);
 
     destroy(dao_config);
@@ -101,10 +93,7 @@ fun test_assertions() {
 
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -145,10 +134,7 @@ fun test_proposal_created() {
 
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let mut dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -180,10 +166,7 @@ fun test_assert_quorum_fails() {
 
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -213,10 +196,7 @@ fun test_assert_max_participants_fails() {
 
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -246,10 +226,7 @@ fun test_assert_min_voting_period_fails() {
 
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -279,10 +256,7 @@ fun test_assert_max_voting_period_fails() {
 
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,
@@ -312,10 +286,7 @@ fun test_assert_nft_type_fails() {
 
     scenario.next_tx(sender);
 
-    let witness = acl::sign_in_for_test();
-
     let dao_config = config::new<NFT>(
-        &witness,
         100,
         51,
         10,

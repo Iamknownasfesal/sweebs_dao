@@ -1,7 +1,7 @@
 module sweebs_dao::config;
 
 use std::type_name::{Self, TypeName};
-use sweebs_dao::{acl::AdminWitness, dao::DAO, errors};
+use sweebs_dao::errors;
 
 public struct DaoConfig has key, store {
     id: UID,
@@ -51,23 +51,17 @@ public(package) fun proposal_created(dao_config: &mut DaoConfig) {
 
 public(package) fun set_maximum_amount_of_participants(
     dao_config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
     maximum_amount_of_participants: u64,
 ) {
     dao_config.maximum_amount_of_participants = maximum_amount_of_participants;
 }
 
-public(package) fun set_quorum(
-    dao_config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
-    quorum: u8,
-) {
+public(package) fun set_quorum(dao_config: &mut DaoConfig, quorum: u8) {
     dao_config.quorum = quorum;
 }
 
 public(package) fun set_min_yes_votes(
     dao_config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
     min_yes_votes: u64,
 ) {
     dao_config.min_yes_votes = min_yes_votes;
@@ -75,7 +69,6 @@ public(package) fun set_min_yes_votes(
 
 public(package) fun set_min_voting_period(
     dao_config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
     min_voting_period: u64,
 ) {
     dao_config.min_voting_period = min_voting_period;
@@ -83,22 +76,17 @@ public(package) fun set_min_voting_period(
 
 public(package) fun set_max_voting_period(
     dao_config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
     max_voting_period: u64,
 ) {
     dao_config.max_voting_period = max_voting_period;
 }
 
-public(package) fun add_nft_type<NFT: key + store>(
-    dao_config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
-) {
+public(package) fun add_nft_type<NFT: key + store>(dao_config: &mut DaoConfig) {
     dao_config.nft_types.push_back(type_name::get<NFT>());
 }
 
 public(package) fun remove_nft_type<NFT: key + store>(
     dao_config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
 ) {
     let (exist, index) = dao_config.nft_types.index_of(&type_name::get<NFT>());
 

@@ -132,64 +132,63 @@ public fun share_config(config: DaoConfig, _: &mut TxContext) {
 
 public fun set_maximum_amount_of_participants(
     config: &mut DaoConfig,
-    witness: &AdminWitness<DAO>,
+    _: &AdminWitness<DAO>,
     maximum_amount_of_participants: u64,
     _: &mut TxContext,
 ) {
     config.set_maximum_amount_of_participants(
-        witness,
         maximum_amount_of_participants,
     );
 }
 
 public fun set_quorum(
     config: &mut DaoConfig,
-    witness: &AdminWitness<DAO>,
+    _: &AdminWitness<DAO>,
     quorum: u8,
     _: &mut TxContext,
 ) {
-    config.set_quorum(witness, quorum);
+    config.set_quorum(quorum);
 }
 
 public fun set_min_yes_votes(
     config: &mut DaoConfig,
-    witness: &AdminWitness<DAO>,
+    _: &AdminWitness<DAO>,
     min_yes_votes: u64,
     _: &mut TxContext,
 ) {
-    config.set_min_yes_votes(witness, min_yes_votes);
+    config.set_min_yes_votes(min_yes_votes);
 }
 
 public fun set_min_voting_period(
     config: &mut DaoConfig,
-    witness: &AdminWitness<DAO>,
+    _: &AdminWitness<DAO>,
     min_voting_period: u64,
     _: &mut TxContext,
 ) {
-    config.set_min_voting_period(witness, min_voting_period);
+    config.set_min_voting_period(min_voting_period);
 }
 
 public fun set_max_voting_period(
     config: &mut DaoConfig,
-    witness: &AdminWitness<DAO>,
+    _: &AdminWitness<DAO>,
     max_voting_period: u64,
     _: &mut TxContext,
 ) {
-    config.set_max_voting_period(witness, max_voting_period);
+    config.set_max_voting_period(max_voting_period);
 }
 
 public fun add_nft_type<NFT: key + store>(
     config: &mut DaoConfig,
-    witness: &AdminWitness<DAO>,
+    _: &AdminWitness<DAO>,
     _: &mut TxContext,
 ) {
-    config.add_nft_type<NFT>(witness);
+    config.add_nft_type<NFT>();
 }
 
 public fun remove_nft_type<NFT: key + store>(
     config: &mut DaoConfig,
-    witness: &AdminWitness<DAO>,
+    _: &AdminWitness<DAO>,
     _: &mut TxContext,
 ) {
-    config.remove_nft_type<NFT>(witness);
+    config.remove_nft_type<NFT>();
 }
