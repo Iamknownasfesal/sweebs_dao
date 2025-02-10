@@ -102,10 +102,6 @@ fun test_assertions() {
         scenario.ctx(),
     );
 
-    // Test quorum assertion
-    dao_config.assert_quorum(51);
-    dao_config.assert_quorum(75);
-
     // Test maximum participants assertion
     dao_config.assert_maximum_amount_of_participants(100);
     dao_config.assert_maximum_amount_of_participants(50);
@@ -146,36 +142,6 @@ fun test_proposal_created() {
     assert_eq(dao_config.proposal_index(), 1);
     dao_config.proposal_created();
     assert_eq(dao_config.proposal_index(), 2);
-
-    destroy(dao_config);
-    ts::end(scenario);
-}
-
-#[
-    test,
-    expected_failure(
-        abort_code = errors::EInvalidQuorum,
-        location = config,
-    ),
-]
-fun test_assert_quorum_fails() {
-    let sender = @0x0;
-    let mut scenario = ts::begin(sender);
-
-    dao::init_for_test(scenario.ctx());
-
-    scenario.next_tx(sender);
-
-    let dao_config = config::new<NFT>(
-        100,
-        51,
-        10,
-        1000,
-        2000,
-        scenario.ctx(),
-    );
-
-    dao_config.assert_quorum(50); // Should fail as it's less than required quorum
 
     destroy(dao_config);
     ts::end(scenario);

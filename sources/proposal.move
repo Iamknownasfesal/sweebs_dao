@@ -129,12 +129,13 @@ public(package) fun execute(
     proposal.assert_proposal_active();
     proposal.assert_proposal_timing(clock);
     proposal.assert_config_id(config);
-    config.assert_quorum(proposal.quorum_threshold(config));
     av.assert_pkg_version();
 
     let vote_type = get_biggest_vote_type(proposal);
 
-    if (config.if_min_yes_votes_met(vote_type.total_vote_value())) {
+    if (
+        config.if_min_yes_votes_met(vote_type.total_vote_value()) && config.if_quorum_met(quorum_threshold(proposal, config))
+    ) {
         proposal.status = ProposalStatus::Executed(vote_type);
     } else {
         proposal.status = ProposalStatus::Failed;

@@ -38,85 +38,71 @@ public(package) macro fun remove_current_version_not_allowed(): u64 {
 }
 
 #[test_only]
-const EInvalidQuorum: u64 = 5;
+const EInvalidMaxParticipants: u64 = 5;
 
-public(package) macro fun invalid_quorum(): u64 {
+public(package) macro fun invalid_max_participants(): u64 {
     5
 }
 
 #[test_only]
-const EInvalidMaxParticipants: u64 = 6;
+const EInvalidMinVotingPeriod: u64 = 6;
 
-public(package) macro fun invalid_max_participants(): u64 {
+public(package) macro fun invalid_min_voting_period(): u64 {
     6
 }
 
 #[test_only]
-const EInvalidMinVotingPeriod: u64 = 7;
+const EInvalidMaxVotingPeriod: u64 = 7;
 
-public(package) macro fun invalid_min_voting_period(): u64 {
+public(package) macro fun invalid_max_voting_period(): u64 {
     7
 }
 
 #[test_only]
-const EInvalidMaxVotingPeriod: u64 = 8;
+const EInvalidNFTType: u64 = 8;
 
-public(package) macro fun invalid_max_voting_period(): u64 {
+public(package) macro fun invalid_nft_type(): u64 {
     8
 }
 
 #[test_only]
-const EInvalidNFTType: u64 = 9;
+const EVoteAlreadyExists: u64 = 9;
 
-public(package) macro fun invalid_nft_type(): u64 {
+public(package) macro fun vote_already_exists(): u64 {
     9
 }
 
 #[test_only]
-const EVoteAlreadyExists: u64 = 10;
+const EInvalidConfigId: u64 = 10;
 
-public(package) macro fun vote_already_exists(): u64 {
+public(package) macro fun invalid_config_id(): u64 {
     10
 }
 
 #[test_only]
-const EInvalidConfigId: u64 = 11;
+const EInvalidVoteTypes: u64 = 11;
 
-public(package) macro fun invalid_config_id(): u64 {
+public(package) macro fun invalid_vote_types(): u64 {
     11
 }
 
 #[test_only]
-const EProposalNotExecuted: u64 = 12;
+const EInvalidTimeRange: u64 = 12;
 
-public(package) macro fun proposal_not_executed(): u64 {
+public(package) macro fun invalid_time_range(): u64 {
     12
 }
 
 #[test_only]
-const EInvalidVoteTypes: u64 = 13;
+const EInvalidProposalStatus: u64 = 13;
 
-public(package) macro fun invalid_vote_types(): u64 {
+public(package) macro fun invalid_proposal_status(): u64 {
     13
 }
 
 #[test_only]
-const EInvalidTimeRange: u64 = 14;
-
-public(package) macro fun invalid_time_range(): u64 {
-    14
-}
-
-#[test_only]
-const EInvalidProposalStatus: u64 = 15;
-
-public(package) macro fun invalid_proposal_status(): u64 {
-    15
-}
-
-#[test_only]
-const EInvalidProposalTiming: u64 = 16;
+const EInvalidProposalTiming: u64 = 14;
 
 public(package) macro fun invalid_proposal_timing(): u64 {
-    16
+    14
 }

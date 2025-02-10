@@ -121,10 +121,6 @@ public(package) fun maximum_amount_of_participants(
 
 // === Assertions ===
 
-public(package) fun assert_quorum(dao_config: &DaoConfig, quorum: u8) {
-    assert!(quorum >= dao_config.quorum, errors::invalid_quorum!());
-}
-
 public(package) fun assert_maximum_amount_of_participants(
     dao_config: &DaoConfig,
     maximum_amount_of_participants: u64,
@@ -167,4 +163,8 @@ public(package) fun if_min_yes_votes_met(
     min_yes_votes: u64,
 ): bool {
     min_yes_votes >= dao_config.min_yes_votes
+}
+
+public(package) fun if_quorum_met(dao_config: &DaoConfig, quorum: u8): bool {
+    quorum >= dao_config.quorum
 }
