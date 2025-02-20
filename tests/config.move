@@ -26,8 +26,6 @@ fun test_init() {
         100, // max participants
         51, // quorum
         10, // min yes votes
-        1000, // min voting period
-        2000, // max voting period
         scenario.ctx(),
     );
 
@@ -51,8 +49,6 @@ fun test_setters() {
         100,
         51,
         10,
-        1000,
-        2000,
         scenario.ctx(),
     );
 
@@ -66,12 +62,6 @@ fun test_setters() {
 
     // Test setting min yes votes
     dao_config.set_min_yes_votes(20);
-
-    // Test setting min voting period
-    dao_config.set_min_voting_period(1500);
-
-    // Test setting max voting period
-    dao_config.set_max_voting_period(3000);
 
     // Test adding and removing NFT types
     dao_config.add_nft_type<NFT>();
@@ -97,8 +87,6 @@ fun test_assertions() {
         100,
         51,
         10,
-        1000,
-        2000,
         scenario.ctx(),
     );
 
@@ -107,14 +95,6 @@ fun test_assertions() {
     // Test maximum participants assertion
     dao_config.assert_maximum_amount_of_participants(100);
     dao_config.assert_maximum_amount_of_participants(50);
-
-    // Test min voting period assertion
-    dao_config.assert_min_voting_period(1000);
-    dao_config.assert_min_voting_period(1500);
-
-    // Test max voting period assertion
-    dao_config.assert_max_voting_period(2000);
-    dao_config.assert_max_voting_period(1500);
 
     // Test NFT type assertion
     dao_config.assert_nft_type<NFT>();
@@ -136,8 +116,6 @@ fun test_proposal_created() {
         100,
         51,
         10,
-        1000,
-        2000,
         scenario.ctx(),
     );
 
@@ -168,72 +146,10 @@ fun test_assert_max_participants_fails() {
         100,
         51,
         10,
-        1000,
-        2000,
         scenario.ctx(),
     );
 
     dao_config.assert_maximum_amount_of_participants(101); // Should fail as it exceeds max
-
-    destroy(dao_config);
-    ts::end(scenario);
-}
-
-#[
-    test,
-    expected_failure(
-        abort_code = errors::EInvalidMinVotingPeriod,
-        location = config,
-    ),
-]
-fun test_assert_min_voting_period_fails() {
-    let sender = @0x0;
-    let mut scenario = ts::begin(sender);
-
-    dao::init_for_test(scenario.ctx());
-
-    scenario.next_tx(sender);
-
-    let dao_config = config::new(
-        100,
-        51,
-        10,
-        1000,
-        2000,
-        scenario.ctx(),
-    );
-
-    dao_config.assert_min_voting_period(999); // Should fail as it's less than min
-
-    destroy(dao_config);
-    ts::end(scenario);
-}
-
-#[
-    test,
-    expected_failure(
-        abort_code = errors::EInvalidMaxVotingPeriod,
-        location = config,
-    ),
-]
-fun test_assert_max_voting_period_fails() {
-    let sender = @0x0;
-    let mut scenario = ts::begin(sender);
-
-    dao::init_for_test(scenario.ctx());
-
-    scenario.next_tx(sender);
-
-    let dao_config = config::new(
-        100,
-        51,
-        10,
-        1000,
-        2000,
-        scenario.ctx(),
-    );
-
-    dao_config.assert_max_voting_period(2001); // Should fail as it exceeds max
 
     destroy(dao_config);
     ts::end(scenario);
@@ -258,8 +174,6 @@ fun test_assert_nft_type_fails() {
         100,
         51,
         10,
-        1000,
-        2000,
         scenario.ctx(),
     );
 

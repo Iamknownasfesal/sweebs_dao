@@ -262,6 +262,53 @@ fun test_duplicate_vote() {
         proposal.vote<NFT>(
             config,
             nft.id(),
+            0,
+            &av.get_allowed_versions(),
+            scenario.ctx(),
+        );
+
+        destroy(proposal);
+        nft.burn();
+    });
+
+    dapp.end();
+}
+
+#[test]
+#[expected_failure(abort_code = errors::EInvalidVoteIndex, location = proposal)]
+fun test_invalid_vote_index() {
+    let mut dapp = deploy();
+
+    dapp.tx!(|av, config, _, scenario| {
+        let mut proposal = proposal::new(
+            TITLE.to_string(),
+            DESCRIPTION.to_string(),
+            START_TIME,
+            END_TIME,
+            config,
+            VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
+            &av.get_allowed_versions(),
+            scenario.ctx(),
+        );
+
+        // Create NFT for voting
+        let nft = test_nft::new(scenario.ctx());
+        let nft2 = test_nft::new(scenario.ctx());
+
+        // Vote first time with index 0
+        proposal.vote<NFT>(
+            config,
+            nft.id(),
+            0,
+            &av.get_allowed_versions(),
+            scenario.ctx(),
+        );
+
+        // Try to vote again with same NFT but different index
+        // This should fail because the voter is already recorded with index 0
+        proposal.vote<NFT>(
+            config,
+            nft2.id(),
             1,
             &av.get_allowed_versions(),
             scenario.ctx(),
@@ -269,6 +316,7 @@ fun test_duplicate_vote() {
 
         destroy(proposal);
         nft.burn();
+        nft2.burn();
     });
 
     dapp.end();
@@ -434,8 +482,6 @@ fun create_test_config(ctx: &mut TxContext): DaoConfig {
         10,
         51,
         2,
-        1000,
-        2000,
         ctx,
     );
 

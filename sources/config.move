@@ -11,10 +11,6 @@ public struct DaoConfig has key, store {
     quorum: u8,
     /// The minimum number of yes votes required for a proposal to pass
     min_yes_votes: u64,
-    /// The minimum voting period duration in milliseconds
-    min_voting_period: u64,
-    /// The maximum voting period duration in milliseconds
-    max_voting_period: u64,
     /// The amount of proposals created
     proposal_index: u64,
     /// TypeName of the NFT used for voting power
@@ -27,8 +23,6 @@ public(package) fun new(
     maximum_amount_of_participants: u64,
     quorum: u8,
     min_yes_votes: u64,
-    min_voting_period: u64,
-    max_voting_period: u64,
     ctx: &mut TxContext,
 ): DaoConfig {
     DaoConfig {
@@ -36,8 +30,6 @@ public(package) fun new(
         maximum_amount_of_participants,
         quorum,
         min_yes_votes,
-        min_voting_period,
-        max_voting_period,
         proposal_index: 1,
         nft_types: vector[],
     }
@@ -65,20 +57,6 @@ public(package) fun set_min_yes_votes(
     min_yes_votes: u64,
 ) {
     dao_config.min_yes_votes = min_yes_votes;
-}
-
-public(package) fun set_min_voting_period(
-    dao_config: &mut DaoConfig,
-    min_voting_period: u64,
-) {
-    dao_config.min_voting_period = min_voting_period;
-}
-
-public(package) fun set_max_voting_period(
-    dao_config: &mut DaoConfig,
-    max_voting_period: u64,
-) {
-    dao_config.max_voting_period = max_voting_period;
 }
 
 public(package) fun add_nft_type<NFT: key + store>(dao_config: &mut DaoConfig) {
@@ -128,26 +106,6 @@ public(package) fun assert_maximum_amount_of_participants(
     assert!(
         maximum_amount_of_participants <= dao_config.maximum_amount_of_participants,
         errors::invalid_max_participants!(),
-    );
-}
-
-public(package) fun assert_min_voting_period(
-    dao_config: &DaoConfig,
-    min_voting_period: u64,
-) {
-    assert!(
-        min_voting_period >= dao_config.min_voting_period,
-        errors::invalid_min_voting_period!(),
-    );
-}
-
-public(package) fun assert_max_voting_period(
-    dao_config: &DaoConfig,
-    max_voting_period: u64,
-) {
-    assert!(
-        max_voting_period <= dao_config.max_voting_period,
-        errors::invalid_max_voting_period!(),
     );
 }
 

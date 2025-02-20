@@ -135,24 +135,6 @@ public fun set_min_yes_votes(
     config.set_min_yes_votes(min_yes_votes);
 }
 
-public fun set_min_voting_period(
-    config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
-    min_voting_period: u64,
-    _: &mut TxContext,
-) {
-    config.set_min_voting_period(min_voting_period);
-}
-
-public fun set_max_voting_period(
-    config: &mut DaoConfig,
-    _: &AdminWitness<DAO>,
-    max_voting_period: u64,
-    _: &mut TxContext,
-) {
-    config.set_max_voting_period(max_voting_period);
-}
-
 public fun add_nft_type<NFT: key + store>(
     config: &mut DaoConfig,
     _: &AdminWitness<DAO>,

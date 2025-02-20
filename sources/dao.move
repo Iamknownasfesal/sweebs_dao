@@ -9,11 +9,9 @@ public struct DAO() has drop;
 
 // === Constants ===
 
-const MAXIMUM_AMOUNT_OF_PARTICIPANTS: u64 = 4444;
-const QUORUM: u8 = 51;
-const MIN_YES_VOTES: u64 = 200;
-const MIN_VOTING_PERIOD: u64 = 10_000_000;
-const MAX_VOTING_PERIOD: u64 = 10_000_000;
+const MAXIMUM_AMOUNT_OF_PARTICIPANTS: u64 = 3333;
+const QUORUM: u8 = 15;
+const MIN_YES_VOTES: u64 = 400;
 
 // === Initializer ===
 
@@ -28,8 +26,6 @@ fun init(otw: DAO, ctx: &mut TxContext) {
         MAXIMUM_AMOUNT_OF_PARTICIPANTS,
         QUORUM,
         MIN_YES_VOTES,
-        MIN_VOTING_PERIOD,
-        MAX_VOTING_PERIOD,
         ctx,
     );
 

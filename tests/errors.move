@@ -20,15 +20,14 @@ fun test_end_to_end() {
 
     // Test configuration related errors
     assert_eq(errors::invalid_max_participants!(), 5);
-    assert_eq(errors::invalid_min_voting_period!(), 6);
-    assert_eq(errors::invalid_max_voting_period!(), 7);
 
     // Test NFT and voting related errors
-    assert_eq(errors::invalid_nft_type!(), 8);
-    assert_eq(errors::vote_already_exists!(), 9);
-    assert_eq(errors::invalid_config_id!(), 10);
-    assert_eq(errors::invalid_vote_types!(), 11);
-    assert_eq(errors::invalid_time_range!(), 12);
-    assert_eq(errors::invalid_proposal_status!(), 13);
-    assert_eq(errors::invalid_proposal_timing!(), 14);
+    assert_eq(errors::invalid_nft_type!(), 6);
+    assert_eq(errors::vote_already_exists!(), 7);
+    assert_eq(errors::invalid_config_id!(), 8);
+    assert_eq(errors::invalid_vote_types!(), 9);
+    assert_eq(errors::invalid_time_range!(), 10);
+    assert_eq(errors::invalid_proposal_status!(), 11);
+    assert_eq(errors::invalid_proposal_timing!(), 12);
+    assert_eq(errors::invalid_vote_index!(), 13);
 }

@@ -42,6 +42,8 @@ public struct Proposal has key, store {
     vote_types: vector<VoteType>,
     /// The table of votes
     vote_table: VoteTable,
+    /// The table of voters -> vote_index
+    voter_table: VoteTable,
     /// The info of the proposal
     info: ProposalInfo,
     /// The status of the proposal
@@ -64,8 +66,6 @@ public(package) fun new(
 ): Proposal {
     assert!(vote_types.length() > 0, errors::invalid_vote_types!());
     assert!(start_time < end_time, errors::invalid_time_range!());
-    config.assert_min_voting_period(end_time - start_time);
-    config.assert_max_voting_period(end_time - start_time);
     av.assert_pkg_version();
 
     config.proposal_created();
@@ -74,6 +74,7 @@ public(package) fun new(
         id: object::new(ctx),
         vote_types: vote_types.map!(|title| vote_type::from_string(title)),
         vote_table: vote_table::new(ctx),
+        voter_table: vote_table::new(ctx),
         info: ProposalInfo {
             number: config.proposal_index(),
             title,
@@ -111,6 +112,14 @@ public(package) fun vote<NFT: key + store>(
     config.assert_nft_type<NFT>();
     proposal.assert_config_id(config);
     av.assert_pkg_version();
+
+    if (proposal.voter_table.contains(ctx.sender())) {
+        let index = proposal.voter_table.get(ctx.sender());
+
+        assert!(vote_index == index, errors::invalid_vote_index!());
+    } else {
+        proposal.voter_table.add(ctx.sender(), vote_index);
+    };
 
     proposal.vote_table.add(nft, vote_index);
     proposal.vote_types.borrow_mut(vote_index).increment_total_vote_value();
