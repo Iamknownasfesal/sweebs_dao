@@ -22,7 +22,7 @@ fun test_init() {
 
     scenario.next_tx(sender);
 
-    let dao_config = config::new<NFT>(
+    let dao_config = config::new(
         100, // max participants
         51, // quorum
         10, // min yes votes
@@ -34,7 +34,7 @@ fun test_init() {
     assert_eq(dao_config.maximum_amount_of_participants(), 100);
     assert_eq(dao_config.quorum(), 51);
     assert_eq(dao_config.proposal_index(), 1);
-    assert_eq(dao_config.nft_types().contains(&type_name::get<NFT>()), true);
+    assert_eq(dao_config.nft_types().contains(&type_name::get<NFT>()), false);
 
     destroy(dao_config);
     ts::end(scenario);
@@ -47,7 +47,7 @@ fun test_setters() {
 
     scenario.next_tx(sender);
 
-    let mut dao_config = config::new<NFT>(
+    let mut dao_config = config::new(
         100,
         51,
         10,
@@ -75,10 +75,10 @@ fun test_setters() {
 
     // Test adding and removing NFT types
     dao_config.add_nft_type<NFT>();
-    assert_eq(dao_config.nft_types().length(), 2);
+    assert_eq(dao_config.nft_types().length(), 1);
 
     dao_config.remove_nft_type<NFT>();
-    assert_eq(dao_config.nft_types().length(), 1);
+    assert_eq(dao_config.nft_types().length(), 0);
 
     destroy(dao_config);
     ts::end(scenario);
@@ -93,7 +93,7 @@ fun test_assertions() {
 
     scenario.next_tx(sender);
 
-    let dao_config = config::new<NFT>(
+    let mut dao_config = config::new(
         100,
         51,
         10,
@@ -101,6 +101,8 @@ fun test_assertions() {
         2000,
         scenario.ctx(),
     );
+
+    dao_config.add_nft_type<NFT>();
 
     // Test maximum participants assertion
     dao_config.assert_maximum_amount_of_participants(100);
@@ -130,7 +132,7 @@ fun test_proposal_created() {
 
     scenario.next_tx(sender);
 
-    let mut dao_config = config::new<NFT>(
+    let mut dao_config = config::new(
         100,
         51,
         10,
@@ -162,7 +164,7 @@ fun test_assert_max_participants_fails() {
 
     scenario.next_tx(sender);
 
-    let dao_config = config::new<NFT>(
+    let dao_config = config::new(
         100,
         51,
         10,
@@ -192,7 +194,7 @@ fun test_assert_min_voting_period_fails() {
 
     scenario.next_tx(sender);
 
-    let dao_config = config::new<NFT>(
+    let dao_config = config::new(
         100,
         51,
         10,
@@ -222,7 +224,7 @@ fun test_assert_max_voting_period_fails() {
 
     scenario.next_tx(sender);
 
-    let dao_config = config::new<NFT>(
+    let dao_config = config::new(
         100,
         51,
         10,
@@ -252,7 +254,7 @@ fun test_assert_nft_type_fails() {
 
     scenario.next_tx(sender);
 
-    let dao_config = config::new<NFT>(
+    let dao_config = config::new(
         100,
         51,
         10,

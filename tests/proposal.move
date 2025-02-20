@@ -430,14 +430,18 @@ fun end(dapp: Dapp) {
 }
 
 fun create_test_config(ctx: &mut TxContext): DaoConfig {
-    config::new<NFT>(
+    let mut config = config::new(
         10,
         51,
         2,
         1000,
         2000,
         ctx,
-    )
+    );
+
+    config.add_nft_type<NFT>();
+
+    config
 }
 
 macro fun tx(

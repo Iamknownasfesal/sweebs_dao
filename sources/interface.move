@@ -6,7 +6,7 @@ use sui::{clock::Clock, kiosk::{Kiosk, KioskOwnerCap}};
 use sweebs_dao::{
     acl::AdminWitness,
     allowed_versions::AllowedVersions,
-    config::{Self, DaoConfig},
+    config::DaoConfig,
     dao::DAO,
     proposal::{Self, Proposal}
 };
@@ -105,30 +105,6 @@ public fun vote_from_personal_kiosk<NFT: key + store>(
 }
 
 // === Public Config Functions ===
-
-public fun new_config<NFT: key + store>(
-    _: &AdminWitness<DAO>,
-    maximum_amount_of_participants: u64,
-    quorum: u8,
-    min_yes_votes: u64,
-    min_voting_period: u64,
-    max_voting_period: u64,
-    ctx: &mut TxContext,
-): DaoConfig {
-    config::new<NFT>(
-        maximum_amount_of_participants,
-        quorum,
-        min_yes_votes,
-        min_voting_period,
-        max_voting_period,
-        ctx,
-    )
-}
-
-#[allow(lint(share_owned))]
-public fun share_config(config: DaoConfig, _: &mut TxContext) {
-    transfer::public_share_object(config);
-}
 
 public fun set_maximum_amount_of_participants(
     config: &mut DaoConfig,

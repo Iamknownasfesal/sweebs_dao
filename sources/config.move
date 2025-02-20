@@ -23,7 +23,7 @@ public struct DaoConfig has key, store {
 
 // === Package Functions ===
 
-public(package) fun new<NFT: key + store>(
+public(package) fun new(
     maximum_amount_of_participants: u64,
     quorum: u8,
     min_yes_votes: u64,
@@ -39,7 +39,7 @@ public(package) fun new<NFT: key + store>(
         min_voting_period,
         max_voting_period,
         proposal_index: 1,
-        nft_types: vector[type_name::get<NFT>()],
+        nft_types: vector[],
     }
 }
 
