@@ -170,6 +170,18 @@ public(package) fun winner(proposal: &Proposal): Option<VoteType> {
     }
 }
 
+// === Public Viwe Functions ===
+
+public fun vote_index(proposal: &Proposal, addr: address): u64 {
+    if (proposal.voter_table.contains(addr)) {
+        let index = proposal.voter_table.get(addr);
+
+        index
+    } else {
+        1025
+    }
+}
+
 // === Private Functions ===
 
 fun get_biggest_vote_type(proposal: &Proposal): VoteType {
