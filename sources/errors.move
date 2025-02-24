@@ -59,43 +59,36 @@ public(package) macro fun vote_already_exists(): u64 {
 }
 
 #[test_only]
-const EInvalidConfigId: u64 = 8;
+const EInvalidVoteTypes: u64 = 8;
 
-public(package) macro fun invalid_config_id(): u64 {
+public(package) macro fun invalid_vote_types(): u64 {
     8
 }
 
 #[test_only]
-const EInvalidVoteTypes: u64 = 9;
+const EInvalidTimeRange: u64 = 9;
 
-public(package) macro fun invalid_vote_types(): u64 {
+public(package) macro fun invalid_time_range(): u64 {
     9
 }
 
 #[test_only]
-const EInvalidTimeRange: u64 = 10;
+const EInvalidProposalStatus: u64 = 10;
 
-public(package) macro fun invalid_time_range(): u64 {
+public(package) macro fun invalid_proposal_status(): u64 {
     10
 }
 
 #[test_only]
-const EInvalidProposalStatus: u64 = 11;
+const EInvalidProposalTiming: u64 = 11;
 
-public(package) macro fun invalid_proposal_status(): u64 {
+public(package) macro fun invalid_proposal_timing(): u64 {
     11
 }
 
 #[test_only]
-const EInvalidProposalTiming: u64 = 12;
-
-public(package) macro fun invalid_proposal_timing(): u64 {
-    12
-}
-
-#[test_only]
-const EInvalidVoteIndex: u64 = 13;
+const EInvalidVoteIndex: u64 = 12;
 
 public(package) macro fun invalid_vote_index(): u64 {
-    13
+    12
 }

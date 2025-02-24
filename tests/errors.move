@@ -24,10 +24,9 @@ fun test_end_to_end() {
     // Test NFT and voting related errors
     assert_eq(errors::invalid_nft_type!(), 6);
     assert_eq(errors::vote_already_exists!(), 7);
-    assert_eq(errors::invalid_config_id!(), 8);
-    assert_eq(errors::invalid_vote_types!(), 9);
-    assert_eq(errors::invalid_time_range!(), 10);
-    assert_eq(errors::invalid_proposal_status!(), 11);
-    assert_eq(errors::invalid_proposal_timing!(), 12);
-    assert_eq(errors::invalid_vote_index!(), 13);
+    assert_eq(errors::invalid_vote_types!(), 8);
+    assert_eq(errors::invalid_time_range!(), 9);
+    assert_eq(errors::invalid_proposal_status!(), 10);
+    assert_eq(errors::invalid_proposal_timing!(), 11);
+    assert_eq(errors::invalid_vote_index!(), 12);
 }

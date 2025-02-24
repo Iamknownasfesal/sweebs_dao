@@ -110,7 +110,6 @@ public(package) fun vote<NFT: key + store>(
     ctx: &TxContext,
 ) {
     config.assert_nft_type<NFT>();
-    proposal.assert_config_id(config);
     av.assert_pkg_version();
 
     if (proposal.voter_table.contains(ctx.sender())) {
@@ -137,7 +136,6 @@ public(package) fun execute(
 ) {
     proposal.assert_proposal_active();
     proposal.assert_proposal_timing(clock);
-    proposal.assert_config_id(config);
     av.assert_pkg_version();
 
     let vote_type = get_biggest_vote_type(proposal);
@@ -215,10 +213,6 @@ fun quorum_threshold(proposal: &Proposal, config: &DaoConfig): u8 {
 }
 
 // === Assertions ===
-
-fun assert_config_id(proposal: &Proposal, config: &DaoConfig) {
-    assert!(proposal.config == config.id(), errors::invalid_config_id!());
-}
 
 fun assert_proposal_active(proposal: &Proposal) {
     assert!(

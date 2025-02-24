@@ -323,43 +323,6 @@ fun test_invalid_vote_index() {
 }
 
 #[test]
-#[expected_failure(abort_code = errors::EInvalidConfigId, location = proposal)]
-fun test_invalid_config_id() {
-    let mut dapp = deploy();
-
-    dapp.tx!(|av, config1, _, scenario| {
-        let config2 = create_test_config(scenario.ctx());
-
-        // Create proposal with config1
-        let mut proposal = proposal::new(
-            TITLE.to_string(),
-            DESCRIPTION.to_string(),
-            START_TIME,
-            END_TIME,
-            config1,
-            VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
-            &av.get_allowed_versions(),
-            scenario.ctx(),
-        );
-
-        // Try to vote using config2 - should fail with EInvalidConfigId
-        vote(
-            av,
-            &config2,
-            scenario,
-            &mut proposal,
-            0,
-            1,
-        );
-
-        destroy(proposal);
-        destroy(config2);
-    });
-
-    dapp.end();
-}
-
-#[test]
 #[
     expected_failure(
         abort_code = errors::EInvalidProposalTiming,
