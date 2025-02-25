@@ -31,7 +31,7 @@ fun test_init() {
 
     assert_eq(dao_config.maximum_amount_of_participants(), 100);
     assert_eq(dao_config.quorum(), 51);
-    assert_eq(dao_config.proposal_index(), 1);
+    assert_eq(dao_config.proposal_index(), 0);
     assert_eq(dao_config.nft_types().contains(&type_name::get<NFT>()), false);
 
     destroy(dao_config);
@@ -119,9 +119,9 @@ fun test_proposal_created() {
         scenario.ctx(),
     );
 
-    assert_eq(dao_config.proposal_index(), 1);
+    assert_eq(dao_config.proposal_index(), 0);
     dao_config.proposal_created();
-    assert_eq(dao_config.proposal_index(), 2);
+    assert_eq(dao_config.proposal_index(), 1);
 
     destroy(dao_config);
     ts::end(scenario);

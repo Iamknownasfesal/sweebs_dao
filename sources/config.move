@@ -30,7 +30,7 @@ public(package) fun new(
         maximum_amount_of_participants,
         quorum,
         min_yes_votes,
-        proposal_index: 1,
+        proposal_index: 0,
         nft_types: vector[],
     }
 }

@@ -35,7 +35,7 @@ public struct Dapp {
 fun test_new_proposal() {
     let mut dapp = deploy();
 
-    dapp.tx!(|av, config, _, scenario| {
+    dapp.tx!(|av, config, clock, scenario| {
         // Create proposal
         let proposal = proposal::new(
             TITLE.to_string(),
@@ -45,6 +45,7 @@ fun test_new_proposal() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -69,11 +70,14 @@ fun test_successful_execution() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
+        clock.set_for_testing(START_TIME + 1);
+
         // Cast 6 yes votes - enough for both quorum and min yes votes
-        vote(av, config, scenario, &mut proposal, 0, 6);
+        vote(av, config, scenario, &mut proposal, 0, 6, clock);
 
         clock.set_for_testing(END_TIME + 1);
 
@@ -112,6 +116,7 @@ fun test_vote_and_execute_failed() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -150,11 +155,14 @@ fun test_quorum_not_met() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
+        clock.set_for_testing(START_TIME + 1);
+
         // Cast only 4 yes votes - not enough for 51% quorum of 10 participants
-        vote(av, config, scenario, &mut proposal, 0, 4);
+        vote(av, config, scenario, &mut proposal, 0, 4, clock);
 
         clock.set_for_testing(END_TIME + 1);
 
@@ -182,7 +190,7 @@ fun test_quorum_not_met() {
 fun test_invalid_time_range() {
     let mut dapp = deploy();
 
-    dapp.tx!(|av, config, _, scenario| {
+    dapp.tx!(|av, config, clock, scenario| {
         let proposal = proposal::new(
             TITLE.to_string(),
             DESCRIPTION.to_string(),
@@ -191,6 +199,7 @@ fun test_invalid_time_range() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -205,7 +214,7 @@ fun test_invalid_time_range() {
 fun test_empty_vote_types() {
     let mut dapp = deploy();
 
-    dapp.tx!(|av, config, _, scenario| {
+    dapp.tx!(|av, config, clock, scenario| {
         // Try to create proposal with empty vote types
         let proposal = proposal::new(
             TITLE.to_string(),
@@ -215,6 +224,7 @@ fun test_empty_vote_types() {
             config,
             vector[], // Empty vote types
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -234,7 +244,7 @@ fun test_empty_vote_types() {
 fun test_duplicate_vote() {
     let mut dapp = deploy();
 
-    dapp.tx!(|av, config, _, scenario| {
+    dapp.tx!(|av, config, clock, scenario| {
         let mut proposal = proposal::new(
             TITLE.to_string(),
             DESCRIPTION.to_string(),
@@ -243,8 +253,11 @@ fun test_duplicate_vote() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
+
+        clock.set_for_testing(START_TIME + 1);
 
         // Create NFT for voting
         let nft = test_nft::new(scenario.ctx());
@@ -255,6 +268,7 @@ fun test_duplicate_vote() {
             nft.id(),
             0,
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -264,6 +278,7 @@ fun test_duplicate_vote() {
             nft.id(),
             0,
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -279,7 +294,7 @@ fun test_duplicate_vote() {
 fun test_invalid_vote_index() {
     let mut dapp = deploy();
 
-    dapp.tx!(|av, config, _, scenario| {
+    dapp.tx!(|av, config, clock, scenario| {
         let mut proposal = proposal::new(
             TITLE.to_string(),
             DESCRIPTION.to_string(),
@@ -288,8 +303,11 @@ fun test_invalid_vote_index() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
+
+        clock.set_for_testing(START_TIME + 1);
 
         // Create NFT for voting
         let nft = test_nft::new(scenario.ctx());
@@ -301,6 +319,7 @@ fun test_invalid_vote_index() {
             nft.id(),
             0,
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -311,6 +330,7 @@ fun test_invalid_vote_index() {
             nft2.id(),
             1,
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -341,6 +361,7 @@ fun test_execute_before_end_time() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
@@ -379,10 +400,11 @@ fun test_execute_after_end_time_and_execute_again() {
             config,
             VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 
-        clock.set_for_testing(END_TIME + 1);
+        clock.set_for_testing(START_TIME + 1);
 
         // Create and vote with 6 NFTs to meet quorum (51% of 10 = 6)
         vote(
@@ -392,7 +414,10 @@ fun test_execute_after_end_time_and_execute_again() {
             &mut proposal,
             0,
             6,
+            clock,
         );
+
+        clock.set_for_testing(END_TIME + 1);
 
         // Try to execute
         proposal.execute(
@@ -411,6 +436,96 @@ fun test_execute_after_end_time_and_execute_again() {
         );
 
         destroy(proposal);
+    });
+
+    dapp.end();
+}
+
+#[test]
+#[
+    expected_failure(
+        abort_code = errors::EInvalidVoteTiming,
+        location = proposal,
+    ),
+]
+fun test_invalid_vote_timing() {
+    let mut dapp = deploy();
+
+    dapp.tx!(|av, config, clock, scenario| {
+        let mut proposal = proposal::new(
+            TITLE.to_string(),
+            DESCRIPTION.to_string(),
+            START_TIME,
+            END_TIME,
+            config,
+            VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
+            &av.get_allowed_versions(),
+            clock,
+            scenario.ctx(),
+        );
+
+        // Create NFT for voting
+        let nft = test_nft::new(scenario.ctx());
+
+        // Try to vote before start time
+        clock.set_for_testing(START_TIME - 5);
+
+        proposal.vote<NFT>(
+            config,
+            nft.id(),
+            0,
+            &av.get_allowed_versions(),
+            clock,
+            scenario.ctx(),
+        );
+
+        destroy(proposal);
+        nft.burn();
+    });
+
+    dapp.end();
+}
+
+#[test]
+#[
+    expected_failure(
+        abort_code = errors::EInvalidVoteTiming,
+        location = proposal,
+    ),
+]
+fun test_invalid_vote_timing_after_end() {
+    let mut dapp = deploy();
+
+    dapp.tx!(|av, config, clock, scenario| {
+        let mut proposal = proposal::new(
+            TITLE.to_string(),
+            DESCRIPTION.to_string(),
+            START_TIME,
+            END_TIME,
+            config,
+            VOTE_TYPES.map!(|vote_type| vote_type.to_string()),
+            &av.get_allowed_versions(),
+            clock,
+            scenario.ctx(),
+        );
+
+        // Create NFT for voting
+        let nft = test_nft::new(scenario.ctx());
+
+        // Try to vote after end time
+        clock.set_for_testing(END_TIME + 5);
+
+        proposal.vote<NFT>(
+            config,
+            nft.id(),
+            0,
+            &av.get_allowed_versions(),
+            clock,
+            scenario.ctx(),
+        );
+
+        destroy(proposal);
+        nft.burn();
     });
 
     dapp.end();
@@ -479,6 +594,7 @@ fun vote(
     proposal: &mut Proposal,
     vote_type: u64,
     vote_amount: u64,
+    clock: &mut Clock,
 ) {
     let mut i = 0;
 
@@ -490,6 +606,7 @@ fun vote(
             nft.id(),
             vote_type,
             &av.get_allowed_versions(),
+            clock,
             scenario.ctx(),
         );
 

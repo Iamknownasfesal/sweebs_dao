@@ -29,4 +29,5 @@ fun test_end_to_end() {
     assert_eq(errors::invalid_proposal_status!(), 10);
     assert_eq(errors::invalid_proposal_timing!(), 11);
     assert_eq(errors::invalid_vote_index!(), 12);
+    assert_eq(errors::invalid_vote_timing!(), 13);
 }

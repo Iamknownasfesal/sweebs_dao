@@ -92,3 +92,10 @@ const EInvalidVoteIndex: u64 = 12;
 public(package) macro fun invalid_vote_index(): u64 {
     12
 }
+
+#[test_only]
+const EInvalidVoteTiming: u64 = 13;
+
+public(package) macro fun invalid_vote_timing(): u64 {
+    13
+}

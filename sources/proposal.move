@@ -62,10 +62,14 @@ public(package) fun new(
     config: &mut DaoConfig,
     vote_types: vector<String>,
     av: &AllowedVersions,
+    clock: &Clock,
     ctx: &mut TxContext,
 ): Proposal {
     assert!(vote_types.length() > 0, errors::invalid_vote_types!());
     assert!(start_time < end_time, errors::invalid_time_range!());
+    assert!(clock.timestamp_ms() < start_time, errors::invalid_time_range!());
+    assert!(clock.timestamp_ms() < end_time, errors::invalid_time_range!());
+
     av.assert_pkg_version();
 
     config.proposal_created();
@@ -107,10 +111,13 @@ public(package) fun vote<NFT: key + store>(
     nft: ID,
     vote_index: u64,
     av: &AllowedVersions,
-    ctx: &TxContext,
+    clock: &Clock,
+    ctx: &mut TxContext,
 ) {
     config.assert_nft_type<NFT>();
     av.assert_pkg_version();
+    proposal.assert_proposal_active();
+    proposal.assert_proposal_timing_for_voting(clock);
 
     if (proposal.voter_table.contains(ctx.sender())) {
         let index = proposal.voter_table.get(ctx.sender());
@@ -135,7 +142,7 @@ public(package) fun execute(
     ctx: &mut TxContext,
 ) {
     proposal.assert_proposal_active();
-    proposal.assert_proposal_timing(clock);
+    proposal.assert_proposal_timing_for_execution(clock);
     av.assert_pkg_version();
 
     let vote_type = get_biggest_vote_type(proposal);
@@ -221,7 +228,14 @@ fun assert_proposal_active(proposal: &Proposal) {
     );
 }
 
-fun assert_proposal_timing(proposal: &Proposal, clock: &Clock) {
+fun assert_proposal_timing_for_voting(proposal: &Proposal, clock: &Clock) {
+    assert!(
+        proposal.info.start_time < clock.timestamp_ms() && proposal.info.end_time > clock.timestamp_ms(),
+        errors::invalid_vote_timing!(),
+    );
+}
+
+fun assert_proposal_timing_for_execution(proposal: &Proposal, clock: &Clock) {
     assert!(
         proposal.info.end_time < clock.timestamp_ms(),
         errors::invalid_proposal_timing!(),

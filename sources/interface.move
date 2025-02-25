@@ -22,6 +22,7 @@ public fun propose(
     end_time: u64,
     vote_type_titles: vector<String>,
     av: &AllowedVersions,
+    clock: &Clock,
     ctx: &mut TxContext,
 ): Proposal {
     proposal::new(
@@ -32,6 +33,7 @@ public fun propose(
         config,
         vote_type_titles,
         av,
+        clock,
         ctx,
     )
 }
@@ -44,8 +46,8 @@ public fun share_proposal(proposal: Proposal, _: &mut TxContext) {
 public fun execute(
     proposal: &mut Proposal,
     config: &DaoConfig,
-    clock: &Clock,
     av: &AllowedVersions,
+    clock: &Clock,
     ctx: &mut TxContext,
 ) {
     proposal.execute(config, clock, av, ctx);
@@ -57,9 +59,10 @@ public fun vote<NFT: key + store>(
     nft: &NFT,
     vote_index: u64,
     av: &AllowedVersions,
+    clock: &Clock,
     ctx: &mut TxContext,
 ) {
-    proposal.vote<NFT>(config, object::id(nft), vote_index, av, ctx);
+    proposal.vote<NFT>(config, object::id(nft), vote_index, av, clock, ctx);
 }
 
 public fun vote_from_kiosk<NFT: key + store>(
@@ -70,6 +73,7 @@ public fun vote_from_kiosk<NFT: key + store>(
     nfts: vector<ID>,
     vote_index: u64,
     av: &AllowedVersions,
+    clock: &Clock,
     ctx: &mut TxContext,
 ) {
     nfts.do!(|nft| {
@@ -78,6 +82,7 @@ public fun vote_from_kiosk<NFT: key + store>(
             object::id(kiosk.borrow_mut<NFT>(kiosk_owner_cap, nft)),
             vote_index,
             av,
+            clock,
             ctx,
         );
     });
@@ -91,6 +96,7 @@ public fun vote_from_personal_kiosk<NFT: key + store>(
     nfts: vector<ID>,
     vote_index: u64,
     av: &AllowedVersions,
+    clock: &Clock,
     ctx: &mut TxContext,
 ) {
     nfts.do!(|nft| {
@@ -99,6 +105,7 @@ public fun vote_from_personal_kiosk<NFT: key + store>(
             object::id(kiosk.borrow_mut<NFT>(kiosk_owner_cap.borrow(), nft)),
             vote_index,
             av,
+            clock,
             ctx,
         );
     });
